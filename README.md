@@ -1,0 +1,1 @@
+# swagger-scala-module
