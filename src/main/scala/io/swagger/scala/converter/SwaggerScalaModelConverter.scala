@@ -8,8 +8,8 @@ import com.wordnik.swagger.jackson.AbstractModelConverter
 
 import com.wordnik.swagger.models.Model
 import com.wordnik.swagger.models.properties._
-
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 import java.lang.reflect.Type
 import java.util.Iterator
@@ -17,7 +17,13 @@ import java.util.Iterator
 import scala.collection.JavaConverters._
 import scala.reflect.api.JavaUniverse
 
+object SwaggerScalaModelConverter {
+  Json.mapper().registerModule(new DefaultScalaModule());
+}
+
 class SwaggerScalaModelConverter extends ModelConverter {
+  SwaggerScalaModelConverter
+
   override
   def resolveProperty(`type`: Type, context: ModelConverterContext, chain: Iterator[ModelConverter]): Property = {
     val javaType = Json.mapper().constructType(`type`)
