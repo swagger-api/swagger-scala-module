@@ -22,6 +22,12 @@ The following methods are available to obtain support for Swagger:
 ## Get started with Swagger!
 See the guide on [getting started with swagger](https://github.com/swagger-api/swagger-core/wiki/Swagger-Core-JAX-RS-Project-Setup) to get started with adding swagger to your API.
 
+
+### To build from source (currently 1.0.0-SNAPSHOT)
+```
+sbt publishLocal
+```
+
 License
 -------
 
