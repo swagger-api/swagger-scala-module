@@ -43,7 +43,9 @@ class ScalaModelTest extends FlatSpec with Matchers {
 
   it should "read a model with vector property" in {
     val schemas = ModelConverters.getInstance().readAll(classOf[ModelWithVector]).asScala
-    Json.prettyPrint(schemas)
+    val model = schemas("ModelWithVector")
+    val friends = model.getProperties().get("friends")
+    friends.isInstanceOf[ArrayProperty] should be (true)
   }
 }
 
