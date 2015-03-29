@@ -28,7 +28,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "com.wordnik" % "swagger-core" % "1.5.3-M1-SNAPSHOT",
+  "com.wordnik" % "swagger-core" % "1.5.4-M1-SNAPSHOT",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.2",
   "junit" % "junit" % "4.11" % "test"
