@@ -8,11 +8,13 @@ import com.wordnik.swagger.jackson.AbstractModelConverter
 
 import com.wordnik.swagger.models.Model
 import com.wordnik.swagger.models.properties._
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 import java.lang.reflect.Type
 import java.util.Iterator
+import java.lang.annotation.Annotation
 
 import scala.collection.JavaConverters._
 import scala.reflect.api.JavaUniverse
@@ -25,7 +27,8 @@ class SwaggerScalaModelConverter extends ModelConverter {
   SwaggerScalaModelConverter
 
   override
-  def resolveProperty(`type`: Type, context: ModelConverterContext, chain: Iterator[ModelConverter]): Property = {
+  def resolveProperty(`type`: Type, context: ModelConverterContext, 
+    annotations: Array[Annotation] , chain: Iterator[ModelConverter]): Property = {
     val javaType = Json.mapper().constructType(`type`)
     val cls = javaType.getRawClass
 
@@ -49,7 +52,7 @@ class SwaggerScalaModelConverter extends ModelConverter {
       }
     }
     if(chain.hasNext())
-      chain.next().resolveProperty(`type`, context, chain)
+      chain.next().resolveProperty(`type`, context, annotations, chain)
     else
       null
   }

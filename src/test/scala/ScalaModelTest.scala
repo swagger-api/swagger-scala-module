@@ -16,11 +16,9 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
 @RunWith(classOf[JUnitRunner])
-class SimpleTest extends FlatSpec with Matchers {
+class ScalaModelTest extends FlatSpec with Matchers {
   it should "extract a scala enum" in {
-    val converter = ModelConverters.getInstance()
-
-    val schemas = converter.readAll(classOf[SModelWithEnum]).asScala
+    val schemas = ModelConverters.getInstance().readAll(classOf[SModelWithEnum]).asScala
     val userSchema = schemas("SModelWithEnum")
     val orderSize = userSchema.getProperties().get("orderSize")
     orderSize.isInstanceOf[StringProperty] should be (true)
@@ -30,9 +28,7 @@ class SimpleTest extends FlatSpec with Matchers {
   }
 
   it should "read a scala case class with properties" in {
-    val converter = ModelConverters.getInstance()
-
-    val schemas = converter.readAll(classOf[SimpleUser]).asScala
+    val schemas = ModelConverters.getInstance().readAll(classOf[SimpleUser]).asScala
     val userSchema = schemas("SimpleUser")
     val id = userSchema.getProperties().get("id")
     id.isInstanceOf[LongProperty] should be (true)
@@ -44,6 +40,15 @@ class SimpleTest extends FlatSpec with Matchers {
     date.isInstanceOf[DateTimeProperty] should be (true)
     date.getDescription should be ("the birthdate")
   }
+
+  it should "read a model with vector property" in {
+    val schemas = ModelConverters.getInstance().readAll(classOf[ModelWithVector]).asScala
+    Json.prettyPrint(schemas)
+  }
 }
+
+case class ModelWithVector (
+  name: String,
+  friends: Vector[String])
 
 case class SimpleUser (id: Long, name: String, @(ApiModelProperty @field)(value = "the birthdate") date: java.util.Date)
