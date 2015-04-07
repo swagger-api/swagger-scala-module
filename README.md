@@ -11,6 +11,22 @@ Check out [Swagger-Spec](https://github.com/swagger-api/swagger-spec) for additi
 ## See the Wiki!
 The [github wiki](https://github.com/swagger-api/swagger-core/wiki) contains documentation, samples, etc.  Start there.
 
+## Compatibility
+This project is compatible with [swagger-core](https://github.com/swagger-api/swagger-core) 1.5.x or greater.
+
+## Usage
+To enable the swagger-scala-module, include the appropriate version in your project:
+
+```
+  "io.swagger" %% "swagger-scala-module" % "1.0.0-SNAPSHOT",
+```
+
+Which will include the proper cross-publish version of swagger-scala-module.
+
+
+## How does it work?
+Including the library in your project allows the swagger extension module to discover this module, bringing in the appropriate jackson library in the process.  You can then use scala classes and objects in your swagger project.
+
 ## Support
 The following methods are available to obtain support for Swagger:
 
