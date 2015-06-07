@@ -1,13 +1,13 @@
 package io.swagger.scala.converter
 
-import com.wordnik.swagger.annotations.ApiModelProperty
+import io.swagger.annotations.ApiModelProperty
 
-import com.wordnik.swagger.converter._
-import com.wordnik.swagger.util.Json
-import com.wordnik.swagger.jackson.AbstractModelConverter
+import io.swagger.converter._
+import io.swagger.util.Json
+import io.swagger.jackson.AbstractModelConverter
 
-import com.wordnik.swagger.models.Model
-import com.wordnik.swagger.models.properties._
+import io.swagger.models.Model
+import io.swagger.models.properties._
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
