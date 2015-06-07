@@ -1,11 +1,11 @@
-import com.wordnik.swagger.converter._
+import io.swagger.converter._
 
 import models._
 import models.OrderSize._
 
-import com.wordnik.swagger.util.Json
-import com.wordnik.swagger.annotations.{ ApiModel, ApiModelProperty }
-import com.wordnik.swagger.models.properties._
+import io.swagger.util.Json
+import io.swagger.annotations.{ ApiModel, ApiModelProperty }
+import io.swagger.models.properties._
 
 import scala.collection.JavaConverters._
 import scala.annotation.meta.field
@@ -20,6 +20,7 @@ class ScalaModelTest extends FlatSpec with Matchers {
   it should "extract a scala enum" in {
     val schemas = ModelConverters.getInstance().readAll(classOf[SModelWithEnum]).asScala
     val userSchema = schemas("SModelWithEnum")
+
     val orderSize = userSchema.getProperties().get("orderSize")
     orderSize.isInstanceOf[StringProperty] should be (true)
 

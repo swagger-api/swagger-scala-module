@@ -1,9 +1,9 @@
-import com.wordnik.swagger.converter._
+import io.swagger.converter._
 
 import models._
 
-import com.wordnik.swagger.util.Json
-import com.wordnik.swagger.models.properties._
+import io.swagger.util.Json
+import io.swagger.models.properties._
 
 import scala.collection.JavaConverters._
 

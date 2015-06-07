@@ -1,6 +1,6 @@
 package models
 
-import com.wordnik.swagger.annotations.{ ApiModel, ApiModelProperty }
+import io.swagger.annotations.{ ApiModel, ApiModelProperty }
 import models.OrderSize.OrderSize
 
 import scala.annotation.meta.field
