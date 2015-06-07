@@ -1,6 +1,6 @@
 package models
 
-import com.wordnik.swagger.annotations.{ ApiModel, ApiModelProperty }
+import io.swagger.annotations.{ ApiModel, ApiModelProperty }
 import scala.annotation.meta.field
 
 case class CoreBug814 (

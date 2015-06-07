@@ -4,13 +4,9 @@ import sbt._
 import Keys._
 import Defaults._
 
-// Blank lines are required between settings.
-
 organization := "io.swagger"
 
 version := "1.0.0"
-
-// artifactName:= "swagger-scala-module"
 
 scalaVersion := "2.10.4"
 
