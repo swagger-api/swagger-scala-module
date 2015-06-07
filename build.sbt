@@ -10,11 +10,11 @@ organization := "io.swagger"
 
 version := "1.0.0"
 
+// artifactName:= "swagger-scala-module"
+
 scalaVersion := "2.10.4"
 
 crossScalaVersions := Seq("2.10.0", "2.10.1", "2.10.2", "2.10.3", "2.10.4", "2.11.0", "2.11.1", "2.11.4")
-
-crossPaths in ThisBuild := false
 
 organizationHomepage in ThisBuild := Some(url("http://swagger.io"))
 
