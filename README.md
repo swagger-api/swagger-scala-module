@@ -31,12 +31,12 @@ Including the library in your project allows the swagger extension module to dis
 The following methods are available to obtain support for Swagger:
 
 - [The Swagger Google Group](https://groups.google.com/forum/#!forum/swagger-swaggersocket) - This would normally be your first stop to get support for Swagger. Here you can find previously asked question, and ask new ones. When asking a question, please provide as much information as you can regarding the environment you use (development language, library, versions.
-- The [Issues tab](https://github.com/swagger-api/swagger-core/issues?state=open) - Please open feature requests and bugs here. If you're not sure you encountered a bug, or if it's a general usage question, please use the Google Group mentioned above.
+- The [Issues tab](https://github.com/swagger-api/swagger-scala-module/issues?state=open) - Please open feature requests and bugs here. If you're not sure you encountered a bug, or if it's a general usage question, please use the Google Group mentioned above.
 - IRC! you can find us on [freenode](http://webchat.freenode.net/?channels=swagger) in the channel #Swagger. You can talk with us directly there.
 
 
 ## Get started with Swagger!
-See the guide on [getting started with swagger](https://github.com/swagger-api/swagger-core/wiki/Swagger-Core-JAX-RS-Project-Setup) to get started with adding swagger to your API.
+See the guide on [getting started with swagger](http://swagger.io) to get started with adding swagger to your API.
 
 
 ### To build from source (currently 1.0.0-SNAPSHOT)
@@ -47,7 +47,7 @@ sbt publishLocal
 License
 -------
 
-Copyright 2015 Reverb Technologies, Inc.
+Copyright 2015 SmartBear Software, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
