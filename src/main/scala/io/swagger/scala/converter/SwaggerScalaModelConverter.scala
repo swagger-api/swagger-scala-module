@@ -1,5 +1,6 @@
 package io.swagger.scala.converter
 
+import com.fasterxml.jackson.databind.`type`.CollectionLikeType
 import io.swagger.annotations.ApiModelProperty
 
 import io.swagger.converter._
@@ -51,10 +52,23 @@ class SwaggerScalaModelConverter extends ModelConverter {
         }
       }
     }
+
+    // Unbox scala options
+    val nextType = `type` match {
+        case clt: CollectionLikeType if (isOption(cls)) => clt.getContentType
+        case _ => `type`
+      }
+
     if(chain.hasNext())
-      chain.next().resolveProperty(`type`, context, annotations, chain)
+      chain.next().resolveProperty(nextType, context, annotations, chain)
     else
       null
+  }
+
+  private def isOption(cls: Class[_]): Boolean ={
+    val optionClass = classOf[scala.Option[_]]
+
+    cls == optionClass
   }
 
   override

@@ -23,4 +23,27 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     isFoo should not be (null)
     isFoo.isInstanceOf[BooleanProperty] should be (true)
   }
+
+  it should "process Option[String] as string" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionString]).asScala.toMap
+    val model = schemas.get("ModelWOptionString")
+    model should be ('defined)
+    val stringOpt = model.get.getProperties().get("stringOpt")
+    stringOpt should not be (null)
+    stringOpt.isInstanceOf[StringProperty] should be (true)
+    val stringWithDataType = model.get.getProperties().get("stringWithDataTypeOpt")
+    stringWithDataType should not be (null)
+    stringWithDataType.isInstanceOf[StringProperty] should be (true)
+  }
+
+  it should "process Option[Model] as Model" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionModel]).asScala.toMap
+    val model = schemas.get("ModelWOptionModel")
+    model should be ('defined)
+    val modelOpt = model.get.getProperties().get("modelOpt")
+    modelOpt should not be (null)
+    modelOpt.isInstanceOf[RefProperty] should be (true)
+  }
 }
