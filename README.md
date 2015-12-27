@@ -18,7 +18,7 @@ This project is compatible with [swagger-core](https://github.com/swagger-api/sw
 To enable the swagger-scala-module, include the appropriate version in your project:
 
 ```
-  "io.swagger" %% "swagger-scala-module" % "1.0.0-SNAPSHOT",
+  "io.swagger" %% "swagger-scala-module" % "1.0.0",
 ```
 
 Which will include the proper cross-publish version of swagger-scala-module.
@@ -39,7 +39,7 @@ The following methods are available to obtain support for Swagger:
 See the guide on [getting started with swagger](http://swagger.io) to get started with adding swagger to your API.
 
 
-### To build from source (currently 1.0.0-SNAPSHOT)
+### To build from source (currently 1.0.0)
 ```
 sbt publishLocal
 ```
