@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.`type`.CollectionLikeType
 import io.swagger.annotations.ApiModelProperty
 
 import io.swagger.converter._
-import io.swagger.util.Json
+import io.swagger.util.{PrimitiveType, Json}
 import io.swagger.jackson.AbstractModelConverter
 
 import io.swagger.models.Model
@@ -21,7 +21,7 @@ import scala.collection.JavaConverters._
 import scala.reflect.api.JavaUniverse
 
 object SwaggerScalaModelConverter {
-  Json.mapper().registerModule(new DefaultScalaModule());
+  Json.mapper().registerModule(new DefaultScalaModule())
 }
 
 class SwaggerScalaModelConverter extends ModelConverter {
@@ -33,23 +33,27 @@ class SwaggerScalaModelConverter extends ModelConverter {
     val javaType = Json.mapper().constructType(`type`)
     val cls = javaType.getRawClass
 
-    // handle scala enums
-    if(cls != null && cls.getFields().map(_.getName).contains("MODULE$")) {
-      val javaUniverse = scala.reflect.runtime.universe
-      val m = javaUniverse.runtimeMirror(getClass.getClassLoader())
-      val moduleSymbol = m.staticModule(cls.getName())
-      val moduleMirror = m.reflectModule(moduleSymbol)
-      val instance = moduleMirror.instance
+    if(cls != null) {
+      // handle scala enums
+      if (cls.getFields().map(_.getName).contains("MODULE$")) {
+        val javaUniverse = scala.reflect.runtime.universe
+        val m = javaUniverse.runtimeMirror(getClass.getClassLoader())
+        val moduleSymbol = m.staticModule(cls.getName())
+        val moduleMirror = m.reflectModule(moduleSymbol)
+        val instance = moduleMirror.instance
 
-      if(instance.isInstanceOf[Enumeration]) {
-        val enumInstance = instance.asInstanceOf[Enumeration]
-        
-        if(enumInstance.values != null) {
-          val sp = new StringProperty()
-          for(v <- enumInstance.values)
-            sp._enum(v.toString)
-          return sp
+        if (instance.isInstanceOf[Enumeration]) {
+          val enumInstance = instance.asInstanceOf[Enumeration]
+
+          if (enumInstance.values != null) {
+            val sp = new StringProperty()
+            for (v <- enumInstance.values)
+              sp._enum(v.toString)
+            return sp
+          }
         }
+      } else if (cls.isAssignableFrom(classOf[BigDecimal])) {
+        return PrimitiveType.DECIMAL.createProperty()
       }
     }
 
