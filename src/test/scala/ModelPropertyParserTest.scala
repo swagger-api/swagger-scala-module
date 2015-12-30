@@ -1,4 +1,5 @@
 import io.swagger.converter._
+import io.swagger.models.properties
 
 import models._
 
@@ -45,5 +46,16 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val modelOpt = model.get.getProperties().get("modelOpt")
     modelOpt should not be (null)
     modelOpt.isInstanceOf[RefProperty] should be (true)
+  }
+
+  it should "process Model with Scala BigDeciaml as Number" in {
+    case class TestModel(field: BigDecimal)
+
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[TestModel]).asScala.toMap
+    val model = schemas.values.headOption
+    model should be ('defined)
+    val modelOpt = model.get.getProperties().get("field")
+    modelOpt shouldBe a [properties.DecimalProperty]
   }
 }
