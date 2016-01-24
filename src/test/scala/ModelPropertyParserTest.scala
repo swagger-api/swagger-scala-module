@@ -33,9 +33,11 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val stringOpt = model.get.getProperties().get("stringOpt")
     stringOpt should not be (null)
     stringOpt.isInstanceOf[StringProperty] should be (true)
+    stringOpt.getRequired should be (false)
     val stringWithDataType = model.get.getProperties().get("stringWithDataTypeOpt")
     stringWithDataType should not be (null)
     stringWithDataType.isInstanceOf[StringProperty] should be (true)
+    stringWithDataType.getRequired should be (false)
   }
 
   it should "process Option[Model] as Model" in {
@@ -48,7 +50,7 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     modelOpt.isInstanceOf[RefProperty] should be (true)
   }
 
-  it should "process Model with Scala BigDeciaml as Number" in {
+  it should "process Model with Scala BigDecimal as Number" in {
     case class TestModel(field: BigDecimal)
 
     val converter = ModelConverters.getInstance()
