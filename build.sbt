@@ -6,7 +6,7 @@ import Defaults._
 
 organization := "io.swagger"
 
-version := "1.0.1"
+version := "1.0.2"
 
 scalaVersion := "2.10.4"
 
@@ -23,7 +23,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "io.swagger" % "swagger-core" % "1.5.6",
+  "io.swagger" % "swagger-core" % "1.5.8",
   "org.scalatest" %% "scalatest" % "2.2.5" % "test",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.4.2",
   "junit" % "junit" % "4.12" % "test"
