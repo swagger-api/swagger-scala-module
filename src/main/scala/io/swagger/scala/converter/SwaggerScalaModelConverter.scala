@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation
 import java.lang.reflect.Type
 import java.util.Iterator
 
-import com.fasterxml.jackson.databind.`type`.CollectionLikeType
+import com.fasterxml.jackson.databind.`type`.ReferenceType
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import io.swagger.converter._
 import io.swagger.models.Model
@@ -19,14 +19,24 @@ class SwaggerScalaModelConverter extends ModelConverter {
   SwaggerScalaModelConverter
 
   override
-  def resolveProperty(`type`: Type, context: ModelConverterContext, 
-    annotations: Array[Annotation] , chain: Iterator[ModelConverter]): Property = {
-    val javaType = Json.mapper().constructType(`type`)
+  def resolveProperty(
+    `type`: Type, context: ModelConverterContext, annotations: Array[Annotation] , chain: Iterator[ModelConverter]
+  ): Property = {
+    // Unbox Option
+    val contentType = `type` match {
+      case refType: ReferenceType if isOption(refType) =>
+        refType.getContentType
+      case _ =>
+        `type`
+    }
+
+    val javaType = Json.mapper().constructType(contentType)
     val cls = javaType.getRawClass
 
-    if(cls != null) {
-      // handle scala enums
+    // Handle Scala types
+    if (cls != null) {
       getEnumerationInstance(cls) match {
+        // Handle scala enums
         case Some(enumInstance) =>
           if (enumInstance.values != null) {
             val sp = new StringProperty()
@@ -34,57 +44,50 @@ class SwaggerScalaModelConverter extends ModelConverter {
               sp._enum(v.toString)
             return sp
           }
+        // Handle BigDecimal
+        case None if isBigDecimal(cls) =>
+          return PrimitiveType.DECIMAL.createProperty()
         case None =>
-          if (cls.isAssignableFrom(classOf[BigDecimal])) {
-            return PrimitiveType.DECIMAL.createProperty()
-          }
       }
     }
 
-    // Unbox scala options
-    val nextType = `type` match {
-        case clt: CollectionLikeType if isOption(cls) => clt.getContentType
-        case _ => `type`
-      }
-
-    if (chain.hasNext())
-      chain.next().resolveProperty(nextType, context, annotations, chain)
-    else
+    // Handle Java types
+    if (chain.hasNext) {
+      chain.next().resolveProperty(contentType, context, annotations, chain)
+    } else {
       null
     }
+  }
 
   override
   def resolve(`type`: Type, context: ModelConverterContext, chain: Iterator[ModelConverter]): Model = {
     val javaType = Json.mapper().constructType(`type`)
     getEnumerationInstance(javaType.getRawClass) match {
-      case Some(enumInstance) =>null // ignore scala enums
+      case Some(enumInstance) => null // ignore scala enums
       case None =>
-        if (chain.hasNext()) {
-          val next = chain.next()
-          next.resolve(`type`, context, chain)
-        }
-        else
+        if (chain.hasNext) {
+          chain.next().resolve(`type`, context, chain)
+        } else {
           null
+        }
     }
   }
-  private def getEnumerationInstance(cls: Class[_]): Option[Enumeration] =
-  {
-    if (cls.getFields.map(_.getName).contains("MODULE$"))
-    {
+
+  private def getEnumerationInstance(cls: Class[_]): Option[Enumeration] = {
+    if (cls.getFields.map(_.getName).contains("MODULE$")) {
       val javaUniverse = scala.reflect.runtime.universe
       val m = javaUniverse.runtimeMirror(Thread.currentThread().getContextClassLoader)
       val moduleMirror = m.reflectModule(m.staticModule(cls.getName))
-      moduleMirror.instance match
-      {
+      moduleMirror.instance match {
         case enumInstance: Enumeration => Some(enumInstance)
         case _ => None
       }
-    }
-    else{
+    } else {
       None
     }
   }
 
-  private def isOption(cls: Class[_]): Boolean = cls == classOf[scala.Option[_]]
+  private def isOption(refType: ReferenceType): Boolean = refType.getAnchorType.getRawClass == classOf[Option[_]]
 
+  private def isBigDecimal(cls: Class[_]): Boolean = cls.isAssignableFrom(classOf[BigDecimal])
 }
