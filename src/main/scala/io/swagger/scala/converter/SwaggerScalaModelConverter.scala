@@ -32,26 +32,33 @@ class SwaggerScalaModelConverter extends ModelConverter {
             val sp = new StringProperty()
             for (v <- enumInstance.values)
               sp._enum(v.toString)
+            sp.setRequired(true)
             return sp
           }
         case None =>
           if (cls.isAssignableFrom(classOf[BigDecimal])) {
-            return PrimitiveType.DECIMAL.createProperty()
+            val dp = PrimitiveType.DECIMAL.createProperty()
+            dp.setRequired(true)
+            return dp
           }
       }
     }
 
     // Unbox scala options
-    val nextType = `type` match {
-        case rt: ReferenceType if isOption(cls) => rt.getContentType
-        case _ => `type`
-      }
-
-    if (chain.hasNext())
-      chain.next().resolveProperty(nextType, context, annotations, chain)
-    else
-      null
+    `type` match {
+      case rt: ReferenceType if isOption(cls) && chain.hasNext => rt.getContentType
+        val nextType = rt.getContentType
+        val nextResolved = chain.next().resolveProperty(nextType, context, annotations, chain)
+        nextResolved.setRequired(false)
+        nextResolved
+      case t if chain.hasNext =>
+        val nextResolved = chain.next().resolveProperty(t, context, annotations, chain)
+        nextResolved.setRequired(true)
+        nextResolved
+      case _ =>
+        null
     }
+  }
 
   override
   def resolve(`type`: Type, context: ModelConverterContext, chain: Iterator[ModelConverter]): Model = {

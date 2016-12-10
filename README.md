@@ -27,6 +27,9 @@ Which will include the proper cross-publish version of swagger-scala-module.
 ## How does it work?
 Including the library in your project allows the swagger extension module to discover this module, bringing in the appropriate jackson library in the process.  You can then use scala classes and objects in your swagger project.
 
+## Treatment of `Option` and `required`
+All properties, besides those wrapped in `Option` or explicitly set via annotations `@ApiModelProperty(required = false)`, default to `required = true`  in the generated swagger model. See [#7](https://github.com/swagger-api/swagger-scala-module/issues/7)
+
 ## Support
 The following methods are available to obtain support for Swagger:
 
