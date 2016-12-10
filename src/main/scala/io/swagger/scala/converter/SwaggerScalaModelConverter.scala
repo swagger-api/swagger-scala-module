@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation
 import java.lang.reflect.Type
 import java.util.Iterator
 
-import com.fasterxml.jackson.databind.`type`.CollectionLikeType
+import com.fasterxml.jackson.databind.`type`.ReferenceType
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import io.swagger.converter._
 import io.swagger.models.Model
@@ -46,8 +46,8 @@ class SwaggerScalaModelConverter extends ModelConverter {
 
     // Unbox scala options
     `type` match {
-      case clt: CollectionLikeType if isOption(cls) && chain.hasNext =>
-        val nextType = clt.getContentType
+      case rt: ReferenceType if isOption(cls) && chain.hasNext => rt.getContentType
+        val nextType = rt.getContentType
         val nextResolved = chain.next().resolveProperty(nextType, context, annotations, chain)
         nextResolved.setRequired(false)
         nextResolved
