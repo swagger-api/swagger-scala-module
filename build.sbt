@@ -8,14 +8,9 @@ organization := "io.swagger"
 
 version := "1.0.3"
 
-// scala 2.12 requires jdk8.  JDK8 cannot be used with 2.10 so crossbuilding won't work
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.8"
 
-crossScalaVersions := Seq("2.10.0", "2.10.1", "2.10.2", "2.10.3", "2.10.4", "2.10.6", "2.11.0", "2.11.1", "2.11.4", "2.11.7")
-
-//scalaVersion := "2.12.0"
-
-//crossScalaVersions := Seq(/*"2.10.0", "2.10.1", "2.10.2", "2.10.3", "2.10.4", "2.10.6", "2.11.0", "2.11.1", "2.11.4", "2.11.7",*/ "2.12.0")
+crossScalaVersions := Seq("2.10.6", scalaVersion.value, "2.12.1")
 
 organizationHomepage in ThisBuild := Some(url("http://swagger.io"))
 
@@ -34,8 +29,8 @@ libraryDependencies ++= Seq(
   "junit" % "junit" % "4.12" % "test"
 )
 
-publishTo <<= (version) { version: String =>
-  if (version.trim.endsWith("SNAPSHOT"))
+publishTo := {
+  if (version.value.trim.endsWith("SNAPSHOT"))
     Some("Sonatype Nexus Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
   else
     Some("Sonatype Nexus Releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
@@ -70,21 +65,23 @@ startYear := Some(2014)
 
 licenses := Seq(("Apache License 2.0", new URL("http://www.apache.org/licenses/LICENSE-2.0.html")))
 
-pomExtra <<= (pomExtra, name, description) {(pom, name, desc) => pom ++ Group(
-  <scm>
-    <connection>scm:git:git@github.com:swagger-api/swagger-scala-module.git</connection>
-    <developerConnection>scm:git:git@github.com:swagger-api/swagger-scala-module.git</developerConnection>
-    <url>https://github.com/swagger-api/swagger-scala-module</url>
-  </scm>
-  <issueManagement>
-    <system>github</system>
-    <url>https://github.com/swagger-api/swagger-scala-module/issues</url>
-  </issueManagement>
-  <developers>
-    <developer>
-      <id>fehguy</id>
-      <name>Tony Tam</name>
-      <email>fehguy@gmail.com</email>
-    </developer>
-  </developers>
-)}
+pomExtra := {
+  pomExtra.value ++ Group(
+    <scm>
+      <connection>scm:git:git@github.com:swagger-api/swagger-scala-module.git</connection>
+      <developerConnection>scm:git:git@github.com:swagger-api/swagger-scala-module.git</developerConnection>
+      <url>https://github.com/swagger-api/swagger-scala-module</url>
+    </scm>
+      <issueManagement>
+        <system>github</system>
+        <url>https://github.com/swagger-api/swagger-scala-module/issues</url>
+      </issueManagement>
+      <developers>
+        <developer>
+          <id>fehguy</id>
+          <name>Tony Tam</name>
+          <email>fehguy@gmail.com</email>
+        </developer>
+      </developers>
+  )
+}

@@ -1,17 +1,12 @@
 import io.swagger.converter._
 import io.swagger.models.properties
-
-import models._
-
-import io.swagger.util.Json
 import io.swagger.models.properties._
-
-import scala.collection.JavaConverters._
-
+import models._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers
+import org.scalatest.{FlatSpec, Matchers}
+
+import scala.collection.JavaConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ModelPropertyParserTest extends FlatSpec with Matchers {
@@ -59,5 +54,28 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     model should be ('defined)
     val modelOpt = model.get.getProperties().get("field")
     modelOpt shouldBe a [properties.DecimalProperty]
+    modelOpt.getRequired should be (true)
+  }
+
+  it should "process all properties as required barring Option[_] or if overridden in annotation" in {
+    val schemas = ModelConverters
+      .getInstance()
+      .readAll(classOf[ModelWithOptionAndNonOption])
+      .asScala
+
+    val model = schemas("ModelWithOptionAndNonOption")
+    model should not be (null)
+
+    val optional = model.getProperties().get("optional")
+    optional.getRequired should be (false)
+
+    val required = model.getProperties().get("required")
+    required.getRequired should be (true)
+
+    val forcedRequired = model.getProperties().get("forcedRequired")
+    forcedRequired.getRequired should be (true)
+
+    val forcedOptional = model.getProperties().get("forcedOptional")
+    forcedOptional.getRequired should be (false)
   }
 }

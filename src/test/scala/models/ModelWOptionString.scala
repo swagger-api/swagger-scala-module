@@ -15,3 +15,10 @@ case class ModelWOptionString (
 case class ModelWOptionModel (
            @(ApiModelProperty @field)(value="this is an Option[Model] attribute") modelOpt: Option[ModelWOptionString]
                                )
+
+case class ModelWithOptionAndNonOption(
+                                        required: String,
+                                        optional: Option[String],
+                                        @ApiModelProperty(required = false) forcedOptional: String,
+                                        @ApiModelProperty(required = true) forcedRequired: Option[String]
+                                      )
