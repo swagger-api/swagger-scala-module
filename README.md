@@ -1,6 +1,7 @@
 # Swagger Scala Module
 
 [![Build Status](https://travis-ci.org/swagger-api/swagger-scala-module.svg?branch=develop)](https://travis-ci.org/swagger-api/swagger-scala-module)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.swagger/swagger-scala-module_2.11/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/io.swagger/swagger-scala-module_2.11)
 
 The goal of Swagger™ is to define a standard, language-agnostic interface to REST APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection. When properly defined via Swagger, a consumer can understand and interact with the remote service with a minimal amount of implementation logic. Similar to what interfaces have done for lower-level programming, Swagger removes the guesswork in calling the service.
 
@@ -18,7 +19,7 @@ This project is compatible with [swagger-core](https://github.com/swagger-api/sw
 To enable the swagger-scala-module, include the appropriate version in your project:
 
 ```
-  "io.swagger" %% "swagger-scala-module" % "1.0.0",
+  "io.swagger" %% "swagger-scala-module" % "1.0.3"
 ```
 
 Which will include the proper cross-publish version of swagger-scala-module.
@@ -42,7 +43,7 @@ The following methods are available to obtain support for Swagger:
 See the guide on [getting started with swagger](http://swagger.io) to get started with adding swagger to your API.
 
 
-### To build from source (currently 1.0.0)
+### To build from source
 ```
 sbt publishLocal
 ```
