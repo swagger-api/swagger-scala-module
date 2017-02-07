@@ -57,6 +57,17 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     modelOpt.getRequired should be (true)
   }
 
+  it should "process Model with Scala Option BigDecimal as optional Number" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionBigDecimal]).asScala.toMap
+    val model = schemas.get("ModelWOptionBigDecimal")
+    model should be ('defined)
+    val optBigDecimal = model.get.getProperties().get("optBigDecimal")
+    optBigDecimal should not be (null)
+    optBigDecimal shouldBe a [properties.DecimalProperty]
+    optBigDecimal.getRequired should be (false)
+  }
+
   it should "process all properties as required barring Option[_] or if overridden in annotation" in {
     val schemas = ModelConverters
       .getInstance()
