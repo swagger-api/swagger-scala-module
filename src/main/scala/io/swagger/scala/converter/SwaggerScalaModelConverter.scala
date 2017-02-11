@@ -19,7 +19,7 @@ class SwaggerScalaModelConverter extends ModelConverter {
   SwaggerScalaModelConverter
 
   override
-  def resolveProperty(`type`: Type, context: ModelConverterContext, 
+  def resolveProperty(`type`: Type, context: ModelConverterContext,
     annotations: Array[Annotation] , chain: Iterator[ModelConverter]): Property = {
     val javaType = Json.mapper().constructType(`type`)
     val cls = javaType.getRawClass
@@ -46,9 +46,14 @@ class SwaggerScalaModelConverter extends ModelConverter {
 
     // Unbox scala options
     `type` match {
-      case rt: ReferenceType if isOption(cls) && chain.hasNext => rt.getContentType
+      case rt: ReferenceType if isOption(cls) && chain.hasNext =>
         val nextType = rt.getContentType
-        val nextResolved = chain.next().resolveProperty(nextType, context, annotations, chain)
+        val nextResolved = {
+          Option(resolveProperty(nextType, context, annotations, chain)) match {
+            case Some(p) => p
+            case None => chain.next().resolveProperty(nextType, context, annotations, chain)
+          }
+        }
         nextResolved.setRequired(false)
         nextResolved
       case t if chain.hasNext =>
@@ -64,7 +69,7 @@ class SwaggerScalaModelConverter extends ModelConverter {
   def resolve(`type`: Type, context: ModelConverterContext, chain: Iterator[ModelConverter]): Model = {
     val javaType = Json.mapper().constructType(`type`)
     getEnumerationInstance(javaType.getRawClass) match {
-      case Some(enumInstance) =>null // ignore scala enums
+      case Some(enumInstance) => null // ignore scala enums
       case None =>
         if (chain.hasNext()) {
           val next = chain.next()
