@@ -95,7 +95,10 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     schemas.get(name) match {
       case Some(m) => Some(m)
       case None =>
-        schemas.keys.find { case k => k.startsWith(name) } flatMap { key => schemas.get(key) }
+        schemas.keys.find { case k => k.startsWith(name) } match {
+          case Some(key) => schemas.get(key)
+          case None => schemas.values.headOption
+        }
     }
   }
 }
