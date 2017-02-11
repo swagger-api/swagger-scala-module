@@ -58,6 +58,18 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     modelOpt.getRequired should be (true)
   }
 
+  it should "process Model with Scala BigInt as Number" in {
+    case class TestModelWithBigInt(field: BigInt)
+
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[TestModelWithBigInt]).asScala.toMap
+    val model = findModel(schemas, "TestModelWithBigInt")
+    model should be ('defined)
+    val modelOpt = model.get.getProperties().get("field")
+    modelOpt shouldBe a [properties.BaseIntegerProperty]
+    modelOpt.getRequired should be (true)
+  }
+
   it should "process Model with Scala Option BigDecimal" in {
     val converter = ModelConverters.getInstance()
     val schemas = converter.readAll(classOf[ModelWOptionBigDecimal]).asScala.toMap
@@ -66,6 +78,17 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val optBigDecimal = model.get.getProperties().get("optBigDecimal")
     optBigDecimal should not be (null)
     optBigDecimal shouldBe a [properties.DecimalProperty]
+    optBigDecimal.getRequired should be (false)
+  }
+
+  it should "process Model with Scala Option BigInt" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionBigInt]).asScala.toMap
+    val model = schemas.get("ModelWOptionBigInt")
+    model should be ('defined)
+    val optBigDecimal = model.get.getProperties().get("optBigInt")
+    optBigDecimal should not be (null)
+    optBigDecimal shouldBe a [properties.BaseIntegerProperty]
     optBigDecimal.getRequired should be (false)
   }
 
