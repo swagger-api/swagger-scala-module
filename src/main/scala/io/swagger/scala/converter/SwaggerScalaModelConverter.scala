@@ -19,7 +19,7 @@ class SwaggerScalaModelConverter extends ModelConverter {
   SwaggerScalaModelConverter
 
   override
-  def resolveProperty(`type`: Type, context: ModelConverterContext, 
+  def resolveProperty(`type`: Type, context: ModelConverterContext,
     annotations: Array[Annotation] , chain: Iterator[ModelConverter]): Property = {
     val javaType = Json.mapper().constructType(`type`)
     val cls = javaType.getRawClass
@@ -40,17 +40,32 @@ class SwaggerScalaModelConverter extends ModelConverter {
             val dp = PrimitiveType.DECIMAL.createProperty()
             dp.setRequired(true)
             return dp
+          } else if (cls.isAssignableFrom(classOf[BigInt])) {
+            val dp = PrimitiveType.INT.createProperty()
+            dp.setRequired(true)
+            return dp
           }
       }
     }
 
     // Unbox scala options
     `type` match {
-      case rt: ReferenceType if isOption(cls) && chain.hasNext => rt.getContentType
+      case rt: ReferenceType if isOption(cls) =>
         val nextType = rt.getContentType
-        val nextResolved = chain.next().resolveProperty(nextType, context, annotations, chain)
-        nextResolved.setRequired(false)
-        nextResolved
+        val nextResolved = {
+          Option(resolveProperty(nextType, context, annotations, chain)) match {
+            case Some(p) => Some(p)
+            case None if chain.hasNext() =>
+              Option(chain.next().resolveProperty(nextType, context, annotations, chain))
+            case _ => None
+          }
+        }
+        nextResolved match {
+          case Some(nextResolved) =>
+            nextResolved.setRequired(false)
+            nextResolved
+          case None => null
+        }
       case t if chain.hasNext =>
         val nextResolved = chain.next().resolveProperty(t, context, annotations, chain)
         nextResolved.setRequired(true)
@@ -64,7 +79,7 @@ class SwaggerScalaModelConverter extends ModelConverter {
   def resolve(`type`: Type, context: ModelConverterContext, chain: Iterator[ModelConverter]): Model = {
     val javaType = Json.mapper().constructType(`type`)
     getEnumerationInstance(javaType.getRawClass) match {
-      case Some(enumInstance) =>null // ignore scala enums
+      case Some(enumInstance) => null // ignore scala enums
       case None =>
         if (chain.hasNext()) {
           val next = chain.next()

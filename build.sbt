@@ -6,7 +6,7 @@ import Defaults._
 
 organization := "io.swagger"
 
-version := "1.0.3"
+version := "1.0.4"
 
 scalaVersion := "2.11.8"
 
