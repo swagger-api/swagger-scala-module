@@ -1,10 +1,9 @@
-package models
-
 import io.swagger.converter._
 import io.swagger.oas.models.media._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
+import models._
 
 import scala.collection.JavaConverters._
 

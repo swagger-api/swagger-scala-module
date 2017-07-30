@@ -1,8 +1,7 @@
-package models
-
 import io.swagger.converter._
 import io.swagger.oas.annotations.Parameter
 import io.swagger.oas.models.media.{ArraySchema, DateTimeSchema, IntegerSchema, StringSchema}
+import models.SModelWithEnum
 
 import scala.collection.JavaConverters._
 import scala.annotation.meta.field
@@ -18,6 +17,7 @@ class ScalaModelTest extends FlatSpec with Matchers {
     val userSchema = schemas("SModelWithEnum")
 
     val orderSize = userSchema.getProperties().get("orderSize")
+    orderSize should not be null
     orderSize shouldBe a [StringSchema]
 
     val sp = orderSize.asInstanceOf[StringSchema]
