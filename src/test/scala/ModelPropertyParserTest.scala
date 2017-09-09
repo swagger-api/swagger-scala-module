@@ -1,5 +1,10 @@
+import java.lang.annotation.Annotation
+import java.util
+import java.lang.reflect.Type
+
 import io.swagger.converter._
 import io.swagger.oas.models.media._
+import io.swagger.scala.converter.SwaggerScalaModelConverter
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
@@ -112,6 +117,24 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     //TODO fix tests
     // val forcedOptional = model.getProperties().get("forcedOptional")
     // nullSafeList(forcedOptional.getRequired) shouldBe empty
+  }
+
+  it should "handle null properties from converters later in the chain" in {
+    object CustomConverter extends ModelConverter {
+      override def resolve(`type`: Type, context: ModelConverterContext, chain: util.Iterator[ModelConverter]): Schema[_] = {
+        if (chain.hasNext) chain.next().resolve(`type`, context, chain) else null
+      }
+
+      override def resolve(`type`: Type, context: ModelConverterContext, annotations: Array[Annotation],
+                                   chain: util.Iterator[ModelConverter]): Schema[_] = {
+        null
+      }
+    }
+
+    val converter = new ModelConverters()
+    converter.addConverter(CustomConverter)
+    converter.addConverter(new SwaggerScalaModelConverter)
+    converter.readAll(classOf[Option[Int]])
   }
 
   def findModel(schemas: Map[String, Schema[_]], name: String): Option[Schema[_]] = {

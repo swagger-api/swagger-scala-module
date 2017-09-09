@@ -55,21 +55,25 @@ class SwaggerScalaModelConverter extends ModelConverter {
         val nextResolved = {
           Option(resolve(nextType, context, annotations, chain)) match {
             case Some(p) => Some(p)
-            case None if chain.hasNext() =>
+            case None if chain.hasNext =>
               Option(chain.next().resolve(nextType, context, annotations, chain))
             case _ => None
           }
         }
         nextResolved match {
-          case Some(nextResolved) =>
-            nextResolved.setRequired(List.empty[String].asJava)
-            nextResolved
+          case Some(property) =>
+            property.setRequired(List.empty[String].asJava)
+            property
           case None => null
         }
       case t if chain.hasNext =>
-        val nextResolved = chain.next().resolve(t, context, annotations, chain)
-        nextResolved.addRequiredItem(t.getTypeName)
-        nextResolved
+        val nextResolved = Option(chain.next().resolve(t, context, annotations, chain))
+        nextResolved match {
+          case Some(property) =>
+            property.addRequiredItem(t.getTypeName)
+            property
+          case None => null
+        }
       case _ =>
         null
     }
