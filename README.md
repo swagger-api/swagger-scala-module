@@ -31,6 +31,24 @@ Including the library in your project allows the swagger extension module to dis
 ## Treatment of `Option` and `required`
 All properties, besides those wrapped in `Option` or explicitly set via annotations `@ApiModelProperty(required = false)`, default to `required = true`  in the generated swagger model. See [#7](https://github.com/swagger-api/swagger-scala-module/issues/7)
 
+## How to hide model properties
+`@ApiModelProperty(hidden = true)` does not work because Scala generates a field and a getter for public properties. The annotation will hide the getter, but the field of the same name will still be visible.
+
+To hide the property, instruct the Scala compiler to annotate both the field and the getter:
+```scala
+import io.swagger.annotations.{ApiModel, ApiModelProperty}
+import scala.annotation.meta.{field,getter}
+
+@ApiModel
+case class Foo(
+  @ApiModelProperty(value = "This will not be hidden!", hidden = true)
+  stillVisible: Int,
+
+  @(ApiModelProperty @field @getter)(value = "A hidden property", hidden = true)
+  actuallyHidden: String
+)
+```
+
 ## Support
 The following methods are available to obtain support for Swagger:
 
