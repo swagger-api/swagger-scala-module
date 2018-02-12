@@ -39,15 +39,12 @@ publishTo := {
 credentials in ThisBuild += Credentials (Path.userHome / ".ivy2" / ".credentials")
 
 resolvers in ThisBuild ++= Seq(
-  "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
-  Resolver.url("Local Ivy Repository", url("file://"+Path.userHome.absolutePath+"/.ivy2/local"))(Resolver.ivyStylePatterns),
-  "Typesafe Releases Repository" at "http://repo.typesafe.com/typesafe/releases/",
-    "Typesafe Snapshots Repository" at "http://repo.typesafe.com/typesafe/snapshots/",
-    "Maven Central" at "http://repo1.maven.org/maven2",
-  "Typesafe Maven Releases Repository" at "https://typesafe.artifactoryonline.com/typesafe/maven-releases/",
-    "Typesafe Maven Snapshots Repository" at "https://typesafe.artifactoryonline.com/typesafe/maven-snapshots/",
-    "sonatype-snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases")
+  Resolver.mavenLocal,
+  Resolver.typesafeRepo("releases"),
+  Resolver.typesafeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases"),
+  Resolver.sonatypeRepo("snapshots")
+)
 
 publishMavenStyle := true
 
