@@ -36,11 +36,11 @@ class SwaggerScalaModelConverter extends ModelConverter {
             return sp
           }
         case None =>
-          if (cls.isAssignableFrom(classOf[BigDecimal])) {
+          if (cls == classOf[BigDecimal]) {
             val dp = PrimitiveType.DECIMAL.createProperty()
             dp.setRequired(true)
             return dp
-          } else if (cls.isAssignableFrom(classOf[BigInt])) {
+          } else if (cls == classOf[BigInt]) {
             val dp = PrimitiveType.INT.createProperty()
             dp.setRequired(true)
             return dp
