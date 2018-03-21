@@ -3,12 +3,15 @@ package io.swagger.scala.converter
 import java.lang.annotation.Annotation
 import java.lang.reflect.Type
 import java.util.Iterator
+import java.util.function.BiFunction
 
+import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.`type`.ReferenceType
+import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import io.swagger.converter._
-import io.swagger.oas.models.media.{Schema, StringSchema}
-import io.swagger.util.{Json, PrimitiveType}
+import io.swagger.v3.core.converter._
+import io.swagger.v3.core.util.{Json, PrimitiveType}
+import io.swagger.v3.oas.models.media.{Schema, StringSchema}
 
 object SwaggerScalaModelConverter {
   Json.mapper().registerModule(new DefaultScalaModule())
@@ -88,6 +91,23 @@ class SwaggerScalaModelConverter extends ModelConverter {
         }
         else
           null
+    }
+  }
+
+  def resolveAnnotatedType(`type`: Type, member: Annotated, elementName: String,
+                           parent: Schema[_],
+                           jsonUnwrappedHandler: BiFunction[JavaType, Array[Annotation], Schema[_]],
+                           context: ModelConverterContext,
+                           chain: Iterator[ModelConverter]): Schema[_] = {
+    Option(resolve(`type`, context, chain)) match {
+      case Some(s) => s
+      case _ => {
+        if (chain.hasNext()) {
+          chain.next().resolveAnnotatedType(`type`, member, elementName, parent, jsonUnwrappedHandler, context, chain)
+        } else {
+          null
+        }
+      }
     }
   }
 

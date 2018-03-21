@@ -1,6 +1,6 @@
 package models
 
-import io.swagger.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Operation
 
 import scala.annotation.meta.field
 

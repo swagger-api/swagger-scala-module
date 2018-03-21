@@ -1,9 +1,13 @@
 import java.lang.annotation.Annotation
 import java.util
 import java.lang.reflect.Type
+import java.util.Iterator
+import java.util.function.BiFunction
 
-import io.swagger.converter._
-import io.swagger.oas.models.media._
+import com.fasterxml.jackson.databind.JavaType
+import com.fasterxml.jackson.databind.introspect.Annotated
+import io.swagger.v3.core.converter._
+import io.swagger.v3.oas.models.media._
 import io.swagger.scala.converter.SwaggerScalaModelConverter
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -126,6 +130,18 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
       override def resolve(`type`: Type, context: ModelConverterContext, annotations: Array[Annotation],
                                    chain: util.Iterator[ModelConverter]): Schema[_] = {
         null
+      }
+
+      override def resolveAnnotatedType(`type`: Type, member: Annotated, elementName: String,
+                               parent: Schema[_],
+                               jsonUnwrappedHandler: BiFunction[JavaType, Array[Annotation], Schema[_]],
+                               context: ModelConverterContext,
+                               chain: Iterator[ModelConverter]): Schema[_] = {
+        if (chain.hasNext()) {
+          chain.next().resolveAnnotatedType(`type`, member, elementName, parent, jsonUnwrappedHandler, context, chain)
+        } else {
+          null
+        }
       }
     }
 

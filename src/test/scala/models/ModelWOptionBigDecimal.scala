@@ -1,3 +1,3 @@
 package models
 
-case class ModelWOptionBigDecimal( optBigDecimal: Option[BigDecimal])
+case class ModelWOptionBigDecimal(optBigDecimal: Option[BigDecimal])

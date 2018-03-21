@@ -1,6 +1,6 @@
-import io.swagger.converter._
-import io.swagger.oas.annotations.Parameter
-import io.swagger.oas.models.media.{ArraySchema, DateTimeSchema, IntegerSchema, StringSchema}
+import io.swagger.v3.core.converter._
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.models.media.{ArraySchema, DateTimeSchema, IntegerSchema, StringSchema}
 import models.SModelWithEnum
 
 import scala.collection.JavaConverters._

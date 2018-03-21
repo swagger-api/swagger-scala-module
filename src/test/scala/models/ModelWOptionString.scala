@@ -1,6 +1,6 @@
 package models
 
-import io.swagger.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.Parameter
 
 case class ModelWOptionString (
            stringOpt: Option[String],
