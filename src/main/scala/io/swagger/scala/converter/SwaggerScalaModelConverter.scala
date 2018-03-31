@@ -74,20 +74,6 @@ class SwaggerScalaModelConverter extends ModelConverter {
     }
   }
 
-//  override def resolve(`type`: AnnotatedType, context: ModelConverterContext, chain: Iterator[ModelConverter]): Schema[_] = {
-//    val javaType = Json.mapper().constructType(`type`.getType)
-//    getEnumerationInstance(javaType.getRawClass) match {
-//      case Some(enumInstance) => null // ignore scala enums
-//      case None =>
-//        if (chain.hasNext()) {
-//          val next = chain.next()
-//          next.resolve(`type`, context, chain)
-//        }
-//        else
-//          null
-//    }
-//  }
-
   private def getEnumerationInstance(cls: Class[_]): Option[Enumeration] =
   {
     if (cls.getFields.map(_.getName).contains("MODULE$")) {
