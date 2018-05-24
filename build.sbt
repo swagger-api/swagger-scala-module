@@ -8,7 +8,7 @@ organization := "io.swagger"
 
 version := "1.0.5-SNAPSHOT"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.12"
 
 crossScalaVersions := Seq("2.10.6", scalaVersion.value, "2.12.4")
 
