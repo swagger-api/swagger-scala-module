@@ -4,13 +4,10 @@ import io.swagger.scala.converter.SwaggerScalaModelConverter
 import io.swagger.v3.core.converter._
 import io.swagger.v3.oas.models.media._
 import models._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.collection.JavaConverters._
 
-@RunWith(classOf[JUnitRunner])
 class ModelPropertyParserTest extends FlatSpec with Matchers {
   it should "verify swagger-core bug 814" in {
     val converter = ModelConverters.getInstance()
@@ -58,9 +55,9 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val model = findModel(schemas, "TestModelWithBigDecimal")
     model should be ('defined)
     model.get.getProperties should not be (null)
-    val modelOpt = model.get.getProperties().get("field")
-    modelOpt shouldBe a [NumberSchema]
-    //nullSafeList(modelOpt.getRequired) should not be empty
+    val field = model.get.getProperties().get("field")
+    field shouldBe a [NumberSchema]
+    nullSafeList(model.get.getRequired) should not be empty
   }
 
   it should "process Model with Scala BigInt as Number" in {
@@ -71,9 +68,9 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val model = findModel(schemas, "TestModelWithBigInt")
     model should be ('defined)
     model.get.getProperties should not be (null)
-    val modelOpt = model.get.getProperties().get("field")
-    modelOpt shouldBe a [IntegerSchema]
-    //nullSafeList(modelOpt.getRequired) should not be empty
+    val field = model.get.getProperties().get("field")
+    field shouldBe a [IntegerSchema]
+    nullSafeList(model.get.getRequired) should not be empty
   }
 
   it should "process Model with Scala Option BigDecimal" in {
@@ -85,7 +82,7 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val optBigDecimal = model.get.getProperties().get("optBigDecimal")
     optBigDecimal should not be (null)
     optBigDecimal shouldBe a [NumberSchema]
-    //nullSafeList(optBigDecimal.getRequired) shouldBe empty
+    nullSafeList(model.get.getRequired) shouldBe empty
   }
 
   it should "process Model with Scala Option BigInt" in {
@@ -97,7 +94,31 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     val optBigDecimal = model.get.getProperties().get("optBigInt")
     optBigDecimal should not be (null)
     optBigDecimal shouldBe a [IntegerSchema]
-    //nullSafeList(optBigDecimal.getRequired) shouldBe empty
+    nullSafeList(model.get.getRequired) shouldBe empty
+  }
+
+  it should "process Model with Scala Option Int" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionInt]).asScala.toMap
+    val model = schemas.get("ModelWOptionInt")
+    model should be ('defined)
+    model.get.getProperties should not be (null)
+    val optInt = model.get.getProperties().get("optInt")
+    optInt should not be (null)
+    optInt shouldBe a [Schema[_]]
+    nullSafeList(model.get.getRequired) shouldBe empty
+  }
+
+  it should "process Model with Scala Option Boolean" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionBoolean]).asScala.toMap
+    val model = schemas.get("ModelWOptionBoolean")
+    model should be ('defined)
+    model.get.getProperties should not be (null)
+    val optBoolean = model.get.getProperties().get("optBoolean")
+    optBoolean should not be (null)
+    optBoolean shouldBe a [Schema[_]]
+    nullSafeList(model.get.getRequired) shouldBe empty
   }
 
   it should "process all properties as required barring Option[_] or if overridden in annotation" in {
@@ -111,16 +132,19 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     model.getProperties() should not be (null)
 
     val optional = model.getProperties().get("optional")
-    // nullSafeList(optional.getRequired) shouldBe empty
+    optional should not be (null)
 
     val required = model.getProperties().get("required")
-    // nullSafeList(required.getRequired) should not be empty
+    required should not be (null)
 
     val forcedRequired = model.getProperties().get("forcedRequired")
-    // nullSafeList(forcedRequired.getRequired) should not be empty
+    forcedRequired should not be (null)
 
     val forcedOptional = model.getProperties().get("forcedOptional")
-    // nullSafeList(forcedOptional.getRequired) shouldBe empty
+    forcedOptional should not be (null)
+
+    val requiredItems = nullSafeList(model.getRequired)
+    requiredItems shouldBe List("forcedRequired", "required")
   }
 
   it should "handle null properties from converters later in the chain" in {
