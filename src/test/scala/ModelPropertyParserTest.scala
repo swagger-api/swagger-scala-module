@@ -1,7 +1,12 @@
+import java.lang.annotation.Annotation
+import java.lang.reflect.Type
+import java.util
+
 import io.swagger.converter._
 import io.swagger.models.Model
 import io.swagger.models.properties
 import io.swagger.models.properties._
+import io.swagger.scala.converter.SwaggerScalaModelConverter
 import models._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -92,6 +97,17 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     optBigDecimal.getRequired should be (false)
   }
 
+  it should "process Model with Scala Option Boolean" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionBoolean]).asScala.toMap
+    val model = schemas.get("ModelWOptionBoolean")
+    model should be ('defined)
+    val optBoolean = model.get.getProperties().get("optBoolean")
+    optBoolean should not be (null)
+    optBoolean shouldBe a [properties.ObjectProperty]
+    optBoolean.getRequired should be (false)
+  }
+
   it should "process all properties as required barring Option[_] or if overridden in annotation" in {
     val schemas = ModelConverters
       .getInstance()
@@ -112,6 +128,23 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
 
     val forcedOptional = model.getProperties().get("forcedOptional")
     forcedOptional.getRequired should be (false)
+  }
+
+  it should "handle null properties from converters later in the chain" in {
+    object CustomConverter extends ModelConverter {
+      def resolve(`type`: Type, context: ModelConverterContext, chain: util.Iterator[ModelConverter]): Model = {
+        if (chain.hasNext) chain.next().resolve(`type`, context, chain) else null
+      }
+
+      def resolveProperty(`type`: Type, context: ModelConverterContext, annotations: Array[Annotation], chain: util.Iterator[ModelConverter]): Property = {
+        null
+      }
+    }
+
+    val converter = new ModelConverters()
+    converter.addConverter(CustomConverter)
+    converter.addConverter(new SwaggerScalaModelConverter)
+    converter.readAll(classOf[Option[Int]])
   }
 
   def findModel(schemas: Map[String, Model], name: String): Option[Model] = {

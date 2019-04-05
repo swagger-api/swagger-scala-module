@@ -36,11 +36,11 @@ class SwaggerScalaModelConverter extends ModelConverter {
             return sp
           }
         case None =>
-          if (cls.isAssignableFrom(classOf[BigDecimal])) {
+          if (cls == classOf[BigDecimal]) {
             val dp = PrimitiveType.DECIMAL.createProperty()
             dp.setRequired(true)
             return dp
-          } else if (cls.isAssignableFrom(classOf[BigInt])) {
+          } else if (cls == classOf[BigInt]) {
             val dp = PrimitiveType.INT.createProperty()
             dp.setRequired(true)
             return dp
@@ -55,21 +55,25 @@ class SwaggerScalaModelConverter extends ModelConverter {
         val nextResolved = {
           Option(resolveProperty(nextType, context, annotations, chain)) match {
             case Some(p) => Some(p)
-            case None if chain.hasNext() =>
+            case None if chain.hasNext =>
               Option(chain.next().resolveProperty(nextType, context, annotations, chain))
             case _ => None
           }
         }
         nextResolved match {
-          case Some(nextResolved) =>
-            nextResolved.setRequired(false)
-            nextResolved
+          case Some(property) =>
+            property.setRequired(false)
+            property
           case None => null
         }
       case t if chain.hasNext =>
-        val nextResolved = chain.next().resolveProperty(t, context, annotations, chain)
-        nextResolved.setRequired(true)
-        nextResolved
+        val nextResolved = Option(chain.next().resolveProperty(t, context, annotations, chain))
+        nextResolved match {
+          case Some(property) =>
+            property.setRequired(true)
+            property
+          case None => null
+        }
       case _ =>
         null
     }
