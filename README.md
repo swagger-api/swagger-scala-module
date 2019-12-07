@@ -19,7 +19,7 @@ This project is compatible with [swagger-core](https://github.com/swagger-api/sw
 To enable the swagger-scala-module, include the appropriate version in your project:
 
 ```
-  "io.swagger" %% "swagger-scala-module" % "1.0.3"
+  "io.swagger" %% "swagger-scala-module" % "1.0.6-SNAPSHOT"
 ```
 
 Which will include the proper cross-publish version of swagger-scala-module.
@@ -65,6 +65,10 @@ See the guide on [getting started with swagger](http://swagger.io) to get starte
 ```
 sbt publishLocal
 ```
+
+## Security contact
+
+Please disclose any security-related issues or vulnerabilities by emailing [security@swagger.io](mailto:security@swagger.io), instead of using the public issue tracker.
 
 License
 -------
