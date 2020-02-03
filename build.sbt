@@ -10,7 +10,7 @@ version := "2.0.0-SNAPSHOT"
 
 scalaVersion := "2.11.12"
 
-crossScalaVersions := Seq("2.10.6", scalaVersion.value, "2.12.6")
+crossScalaVersions := Seq("2.10.6", scalaVersion.value, "2.12.6", "2.13.0")
 
 organizationHomepage in ThisBuild := Some(url("http://swagger.io"))
 
@@ -23,9 +23,9 @@ publishArtifact in Test := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "io.swagger.core.v3" % "swagger-core" % "2.0.4",
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.6",
+  "io.swagger.core.v3" % "swagger-core" % "2.1.1",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.10.2",
   "junit" % "junit" % "4.12" % Test,
   "org.slf4j" % "slf4j-simple" % "1.7.25" % Test
 )

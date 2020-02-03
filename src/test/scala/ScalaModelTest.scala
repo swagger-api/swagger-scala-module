@@ -49,10 +49,18 @@ class ScalaModelTest extends FlatSpec with Matchers {
     prop shouldBe a [ArraySchema]
     prop.asInstanceOf[ArraySchema].getItems.getType should be ("object")
   }
+  
+  it should "read a model with vector of booleans" in {
+    val schemas = ModelConverters.getInstance().readAll(classOf[ModelWithBooleanVector]).asScala
+    val model = schemas("ModelWithBooleanVector")
+    val prop = model.getProperties().get("bools")
+    prop.isInstanceOf[ArrayProperty] should be (true)
+    prop.asInstanceOf[ArrayProperty].getItems.getType should be ("object")
+  }  
 }
 
 case class ModelWithVector (name: String, friends: Vector[String])
-
 case class ModelWithIntVector (ints: Vector[Int])
+case class ModelWithBooleanVector (bools: Vector[Boolean])
 
 case class SimpleUser (id: Long, name: String, @(Parameter @field)(description =  "the birthdate") date: java.util.Date)

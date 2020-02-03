@@ -121,6 +121,17 @@ class ModelPropertyParserTest extends FlatSpec with Matchers {
     nullSafeList(model.get.getRequired) shouldBe empty
   }
 
+  it should "process Model with Scala Option Boolean" in {
+    val converter = ModelConverters.getInstance()
+    val schemas = converter.readAll(classOf[ModelWOptionBoolean]).asScala.toMap
+    val model = schemas.get("ModelWOptionBoolean")
+    model should be ('defined)
+    val optBoolean = model.get.getProperties().get("optBoolean")
+    optBoolean should not be (null)
+    optBoolean shouldBe a [properties.ObjectProperty]
+    optBoolean.getRequired should be (false)
+  }
+
   it should "process all properties as required barring Option[_] or if overridden in annotation" in {
     val schemas = ModelConverters
       .getInstance()
