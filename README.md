@@ -1,3 +1,7 @@
+# Archived
+
+This project is no longer supported
+
 # Swagger Scala Module
 
 [![Build Status](https://travis-ci.org/swagger-api/swagger-scala-module.svg?branch=develop)](https://travis-ci.org/swagger-api/swagger-scala-module)
